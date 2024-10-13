@@ -4,13 +4,17 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/button";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Page() {
   const [todos, setTodos] = useState<any[] | null>(null);
   const supabase = createClient();
   const router = useRouter();
 
+  const {user} = useAuth();
+
   useEffect(() => {
+    console.log("User Authentication Info:", user);
     const getData = async () => {
       const { data } = await supabase.from("todos").select();
       console.log("client read");
@@ -18,7 +22,7 @@ export default function Page() {
       router.refresh();
     };
     getData();
-  }, [supabase]);
+  }, [supabase, user]);
 
   const addTodoAction = async () => {
     const supabase = createClient();
